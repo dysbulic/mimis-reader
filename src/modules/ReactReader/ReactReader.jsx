@@ -13,6 +13,7 @@ class TocItem extends PureComponent {
   setLocation = () => {
     this.props.setLocation(this.props.href);
   };
+
   render() {
     const { label, styles } = this.props;
     return (
@@ -36,9 +37,10 @@ class ReactReader extends PureComponent {
     this.readerRef = React.createRef();
     this.state = {
       expandedToc: false,
-      toc: false
+      toc: false,
     };
   }
+
   toggleToc = () => {
     this.setState({
       expandedToc: !this.state.expandedToc
@@ -55,7 +57,7 @@ class ReactReader extends PureComponent {
     node.prevPage();
   };
 
-  onTocChange = toc => {
+  onTocChange = (toc) => {
     const { tocChanged } = this.props;
     this.setState(
       {
@@ -68,20 +70,29 @@ class ReactReader extends PureComponent {
   renderToc() {
     const { toc, expandedToc } = this.state;
     const { styles } = this.props;
+
+    const tocDOM = (this.props.renderToc) ? (
+      this.props.renderToc({
+        toc, expanded: expandedToc, styles,
+        setLocation: this.setLocation.bind(this),
+      })
+    ) : (
+      <div style={styles.tocArea}>
+        <div style={styles.toc}>
+          {toc.map((item, i) => (
+            <TocItem
+              {...item}
+              key={i}
+              setLocation={this.setLocation}
+              styles={styles.tocAreaButton}
+            />
+          ))}
+        </div>
+      </div>
+    )
     return (
       <div>
-        <div style={styles.tocArea}>
-          <div style={styles.toc}>
-            {toc.map((item, i) => (
-              <TocItem
-                {...item}
-                key={i}
-                setLocation={this.setLocation}
-                styles={styles.tocAreaButton}
-              />
-            ))}
-          </div>
-        </div>
+        {tocDOM}
         {expandedToc && (
           <div style={styles.tocBackground} onClick={this.toggleToc} />
         )}
@@ -89,7 +100,7 @@ class ReactReader extends PureComponent {
     );
   }
 
-  setLocation = loc => {
+  setLocation = (loc) => {
     const { locationChanged } = this.props;
     this.setState(
       {

@@ -71,6 +71,7 @@ class EpubView extends Component {
     const { toc } = this.state;
     const { location, epubOptions, getRendition } = this.props;
     const node = this.viewerRef.current;
+
     this.rendition = this.book.renderTo(node, {
       contained: true,
       width: "100%",
@@ -100,19 +101,19 @@ class EpubView extends Component {
     const { handleKeyPress, handleTextSelected } = this.props;
     this.rendition.on("locationChanged", this.onLocationChange);
     this.rendition.on("keyup", handleKeyPress || this.handleKeyPress);
-    if (handleTextSelected) {
+    if(handleTextSelected) {
       this.rendition.on('selected', handleTextSelected);
     }
   }
 
-  onLocationChange = loc => {
+  onLocationChange = (loc) => {
     const { location, locationChanged } = this.props;
     const newLocation = loc && loc.start;
-    if (location !== newLocation) {
+    if(location !== newLocation) {
       this.location = newLocation;
       locationChanged && locationChanged(newLocation);
     }
-  };
+  }
 
   renderBook() {
     const { styles } = this.props;
