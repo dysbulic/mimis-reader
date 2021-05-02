@@ -1,0 +1,44 @@
+h1 {
+  font-variant: small-caps;
+  font-size: 3rem;
+  break-after: avoid;
+}
+
+h2 {
+  font-size: 2rem;
+}
+
+section section h1 {
+  font-variant: normal;
+  font-size: 1.5rem;
+  font-style: italic;
+  font-weight: normal;
+}
+
+p {
+  text-align: justify;
+  text-indent: 1.5em;
+}
+
+blockquote p {
+  text-indent: 0;
+}
+
+hr {
+  width: 35%;
+}
+
+img {
+  display: block;
+  margin: auto;
+}
+
+q {
+  quotes: "“" "”" "‘" "’";
+}
+q::before {
+  content: open-quote;
+}
+q::after {
+  content: close-quote;
+}

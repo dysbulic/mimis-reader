@@ -1,17 +1,19 @@
 {
   "files": {
-    "main.js": "/react-reader/static/js/main.e9a67f96.chunk.js",
-    "main.js.map": "/react-reader/static/js/main.e9a67f96.chunk.js.map",
-    "runtime-main.js": "/react-reader/static/js/runtime-main.ea942c4c.js",
-    "runtime-main.js.map": "/react-reader/static/js/runtime-main.ea942c4c.js.map",
-    "static/js/2.14ce598b.chunk.js": "/react-reader/static/js/2.14ce598b.chunk.js",
-    "static/js/2.14ce598b.chunk.js.map": "/react-reader/static/js/2.14ce598b.chunk.js.map",
-    "index.html": "/react-reader/index.html",
-    "static/js/2.14ce598b.chunk.js.LICENSE.txt": "/react-reader/static/js/2.14ce598b.chunk.js.LICENSE.txt"
+    "main.js": "/mimis-reader/static/js/main.69b0cc6c.chunk.js",
+    "main.js.map": "/mimis-reader/static/js/main.69b0cc6c.chunk.js.map",
+    "runtime-main.js": "/mimis-reader/static/js/runtime-main.145908df.js",
+    "runtime-main.js.map": "/mimis-reader/static/js/runtime-main.145908df.js.map",
+    "static/js/2.a9583323.chunk.js": "/mimis-reader/static/js/2.a9583323.chunk.js",
+    "static/js/2.a9583323.chunk.js.map": "/mimis-reader/static/js/2.a9583323.chunk.js.map",
+    "index.html": "/mimis-reader/index.html",
+    "static/js/2.a9583323.chunk.js.LICENSE.txt": "/mimis-reader/static/js/2.a9583323.chunk.js.LICENSE.txt",
+    "static/media/logo.svg": "/mimis-reader/static/media/logo.e556df7d.svg",
+    "static/media/mïmir.svg": "/mimis-reader/static/media/mïmir.2a922d8c.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.ea942c4c.js",
-    "static/js/2.14ce598b.chunk.js",
-    "static/js/main.e9a67f96.chunk.js"
+    "static/js/runtime-main.145908df.js",
+    "static/js/2.a9583323.chunk.js",
+    "static/js/main.69b0cc6c.chunk.js"
   ]
 }

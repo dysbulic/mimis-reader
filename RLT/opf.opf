@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='utf-8'?>
+<package xmlns="http://www.idpf.org/2007/opf" version="3.0" unique-identifier="uuid_id" prefix="calibre: https://calibre-ebook.com">
+  <metadata xmlns:opf="http://www.idpf.org/2007/opf" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:calibre="http://calibre.kovidgoyal.net/2009/metadata">
+    <dc:title id="title">The Road Less Traveled</dc:title>
+    <dc:creator id="author">M. Scott Peck</dc:creator>
+    <dc:language>en</dc:language>
+    <dc:contributor id="contrib">calibre (5.17.0) [https://calibre-ebook.com]</dc:contributor>
+    <dc:date>2014-01-24T16:25:27+00:00</dc:date>
+    <dc:identifier id="uuid">uuid:0df70291-cf71-4772-a569-a66616296bba</dc:identifier>
+    <meta refines="#title" property="title-type">main</meta>
+    <meta refines="#title" property="file-as">Road Less Traveled, The</meta>
+    <meta name="cover" content="cover"/>
+    <meta refines="#author" property="role" scheme="marc:relators">aut</meta>
+    <meta refines="#author" property="file-as">Peck, M. Scott</meta>
+    <meta refines="#contrib" property="role" scheme="marc:relators">bkp</meta>
+    <meta property="dcterms:modified" scheme="dcterms:W3CDTF">2021-05-01T08:52:35Z</meta>
+  </metadata>
+  <manifest>
+    <item id="coverpage" href="cover/xhtml" media-type="application/xhtml+xml" properties="svg"/>
+    <item id="titlepage" href="title/xhtml" media-type="application/xhtml+xml" properties="calibre:title-page"/>
+    <item id="dedication" href="dedication/xhtml" media-type="application/xhtml+xml"/>
+    <item id="introduction" href="Introduction/xhtml" media-type="application/xhtml+xml"/>
+    <item id="section-1" href="Discipline/xhtml" media-type="application/xhtml+xml"/>
+    <item id="section-2" href="Love/xhtml" media-type="application/xhtml+xml"/>
+    <item id="section-3" href="Growth and Religion/xhtml" media-type="application/xhtml+xml"/>
+    <item id="section-4" href="Grace/xhtml" media-type="application/xhtml+xml"/>
+    <item id="css" href="css" media-type="text/css"/>
+    <item id="cover" href="cover/jpeg" media-type="image/jpeg" properties="cover-image"/>
+    <item id="id3" href="images/00001.jpg" media-type="image/jpeg"/>
+    <item id="id4" href="images/00002.jpg" media-type="image/jpeg"/>
+    <item id="nav" href="nav/xhtml" media-type="application/xhtml+xml" properties="nav"/>
+  </manifest>
+  <spine toc="toc">
+    <itemref idref="coverpage"/>
+    <itemref idref="titlepage"/>
+    <itemref idref="dedication"/>
+    <itemref idref="introduction"/>
+    <itemref idref="section-1"/>
+    <itemref idref="section-2"/>
+    <itemref idref="section-3"/>
+    <itemref idref="section-4"/>
+  </spine>
+  </package>

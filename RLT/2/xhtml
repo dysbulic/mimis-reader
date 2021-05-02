@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <title>M. Scott Peck's The Road Less Traveled</title>
+    <link rel="stylesheet" type="text/css" href="css"/>
+    <style type="text/css">
+      body { margin-top: 13rem }
+      h1, h2, h3 { text-align: center }
+    </style>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <h1><cite>The Road Less Traveled</cite></h1>
+    <h2 style="max-width: 15em; margin: 1.5rem auto; font-variant-caps: petite-caps;">
+      A New Psychology of Love, Traditional Values and Spiritual Growth
+    </h2>
+    <h2>M. Scott Peck, M.D.</h2>
+    <hr/>
+    <h3 style="text-transform: uppercase">A Touchstone Book</h3>
+    <h3>Published by Simon &amp; Schuster</h3>
+  </body>
+</html>
