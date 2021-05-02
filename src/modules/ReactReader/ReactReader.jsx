@@ -1,8 +1,12 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { useSwipeable } from 'react-swipeable'
-import { Button, Icon, Stack } from '@chakra-ui/react'
-import { BiCollection } from 'react-icons/bi'
+import {
+  Box, Button, Icon, Stack, Flex, Drawer,
+  DrawerOverlay, DrawerHeader, DrawerBody, DrawerFooter,
+  DrawerContent, DrawerCloseButton, useDisclosure,
+} from '@chakra-ui/react'
+import { BiCollection, BiDockLeft } from 'react-icons/bi'
 import { EpubView } from '..'
 import defaultStyles from './style'
 
@@ -11,27 +15,16 @@ const Swipeable = ({children, ...props}) => {
   return (<div { ...handlers }>{children}</div>)
 }
 
-class TocItem extends PureComponent {
-  setLocation = () => {
-    this.props.setLocation(this.props.href)
-  }
-
-  render() {
-    const { label, setLocation, ...props } = this.props
-    return (
-      <Button onClick={this.setLocation} {...props}>
-        {label}
-      </Button>
-    )
-  }
-}
-
-TocItem.propTypes = {
-  label: PropTypes.string,
-  href: PropTypes.string,
-  setLocation: PropTypes.func,
-  styles: PropTypes.object
-}
+const TocItem = ({
+  label, setLocation, href, ...props
+}) => (
+  <Button
+    onClick={() => setLocation(href)}
+    {...props}
+  >
+    {label}
+  </Button>
+)
 
 class ReactReader extends PureComponent {
   constructor(props) {
@@ -71,50 +64,60 @@ class ReactReader extends PureComponent {
 
   renderToc() {
     const { toc, expandedToc } = this.state
-    const { styles } = this.props
+    //const { isOpen, onOpen, onClose } = useDisclosure()
 
-    const tocDOM = (this.props.renderToc) ? (
-      this.props.renderToc({
-        toc, expanded: expandedToc, styles,
-        setLocation: this.setLocation.bind(this),
-      })
-    ) : (
-      <Stack>
-        {toc.map((item) => (
-          [item, ...item.subitems].map((child, i) => (
-            <TocItem
-              key={i} {...child}
-              textAlign="left"
-              setLocation={this.setLocation}
-            />
-          ))
-        ))}
-      </Stack>
-    )
     return (
-      <div>
-        {tocDOM}
-        {expandedToc && (
-          <div style={styles.tocBackground} onClick={this.toggleToc} />
-        )}
-      </div>
+      <Drawer
+        isOpen={expandedToc}
+        placement="left"
+        //onClose={onClose}
+        //finalFocusRef={btnRef}
+      >
+        <DrawerOverlay>
+          <DrawerContent>
+            <DrawerCloseButton />
+            <DrawerHeader>Table of Contents</DrawerHeader>
+
+            <DrawerBody>
+              {toc.map((item) => (
+                ((() => {
+                return [item, ...item.subitems].map((child, i) => (
+                  <TocItem
+                    key={i} {...child}
+                    justify="flex-start"
+                    fontSize={20} fontWeight="normal"
+                    setLocation={this.setLocation}
+                  />
+                ))
+                })())
+              ))}
+            </DrawerBody>
+
+            <DrawerFooter>
+              <Button variant="outline" mr={3} onClick={null/*onClose*/}>
+                Cancel
+              </Button>
+              <Button colorScheme="blue">Save</Button>
+            </DrawerFooter>
+          </DrawerContent>
+        </DrawerOverlay>
+      </Drawer>
     )
   }
 
   setLocation = (loc) => {
     const { locationChanged } = this.props
     this.setState(
-      {
-        expandedToc: false
-      },
+      { expandedToc: false },
       () => locationChanged && locationChanged(loc)
     )
   }
 
   renderTocToggle() {
+    const { expandedToc } = this.state
     return (
       <Button onClick={this.toggleToc}>
-        {/* <HamburgerMenu/> */}
+        <Icon as={expandedToc ? BiDockLeft : BiCollection}/>
       </Button>
     )
   }
@@ -132,16 +135,23 @@ class ReactReader extends PureComponent {
     } = this.props
     const { toc, expandedToc } = this.state
     return (
-      <div style={styles.container}>
-        <div
-          style={Object.assign(
-            {},
-            styles.readerArea,
-            expandedToc ? styles.containerExpanded : {}
-          )}
+      <Flex h="100%">
+        {showToc && toc && this.renderToc()}
+        <Flex
+          position="relative"
+          zIndex={1}
+          height="100%" width="100%"
+          backgroundColor="#FFF"
+          transition="all .3s ease"
         >
           {showToc && this.renderTocToggle()}
-          <div style={styles.titleArea}>{title}</div>
+          <Box
+            position="absolute"
+            top={1} left="50vw"
+            transform="translateX(-50%)"
+            textAlign="center"
+            color="#999"
+          >{title}</Box>
           <Swipeable
             onSwipedRight={this.prev}
             onSwipedLeft={this.next}
@@ -171,9 +181,8 @@ class ReactReader extends PureComponent {
           >
             ›
           </button>
-        </div>
-        {showToc && toc && this.renderToc()}
-      </div>
+        </Flex>
+      </Flex>
     )
   }
 }
