@@ -1,7 +1,7 @@
 {
   "name": "mimis-reader",
   "version": "0.21.0",
-  "description": "A epub-reader for React powered by ePubJS",
+  "description": "A e-reader powered by ePubJS & Mïmis",
   "main": "lib/index.js",
   "scripts": {
     "compile": "NODE_ENV=production babel --out-dir lib src/modules",
@@ -18,7 +18,10 @@
     "type": "git",
     "url": "git+https://github.com/dysbulic/mimis-reader.git"
   },
-  "author": ["Eyvind Gerhard Sletten", "Will Holcomb <dys@dhappy.org>"],
+  "authors": [
+    "Eyvind Gerhard Sletten",
+    "Will Holcomb <dys@dhappy.org>"
+  ],
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/dysbulic/mimis-reader/issues"
@@ -56,6 +59,7 @@
     "epubjs": "^0.3.88",
     "framer-motion": "^4",
     "prop-types": "^15.7.2",
+    "react-icons": "^4.2.0",
     "react-swipeable": "^6.0.0"
   },
   "peerDependencies": {

@@ -1,21 +1,28 @@
 import React, { Component } from 'react'
 import FileReaderInput from 'react-file-reader-input'
+import {
+  chakra, Box, Heading, Link, Stack, Text, Flex, Button,
+  Spacer, Icon,
+} from '@chakra-ui/react'
+import { BiExpand, BiUpload } from 'react-icons/bi'
 import { ReactReader } from './modules'
 import {
-  Container,
-  ReaderContainer,
-  Bar,
-  LogoWrapper,
-  Logo,
-  GenericButton,
+  //Container,
+  //ReaderContainer,
+  //Bar,
+  //LogoWrapper,
+  //Logo,
+  //GenericButton,
   CloseIcon,
-  FontSizeButton,
-  ButtonWrapper
+  //FontSizeButton,
+  //ButtonWrapper,
 } from './Components'
+import logo from './logo.svg'
+import mïmir from './mïmir.svg'
 
 const storage = global.localStorage || null
 
-const DEMO_URL = '/react-reader/RLT/opf.opf'
+const DEMO_URL = '/mimis-reader/RLT/opf.opf'
 const DEMO_NAME = 'M. Scott Peck – The Road Less Traveled'
 
 export default class App extends Component {
@@ -31,11 +38,9 @@ export default class App extends Component {
     this.rendition = null
   }
 
-  toggleFullscreen = () => {
+  toggleFullscreen = () => (
     this.setState(
-      {
-        fullscreen: !this.state.fullscreen
-      },
+      { fullscreen: !this.state.fullscreen },
       () => {
         setTimeout(() => {
           const evt = document.createEvent('UIEvents')
@@ -43,15 +48,13 @@ export default class App extends Component {
         }, 1000)
       }
     )
-  }
+  )
 
   onLocationChanged = (location) => {
     this.setState(
-      {
-        location
-      },
+      { location },
       () => {
-        storage && storage.setItem('epub-location', location)
+        storage?.setItem?.('epub-location', location)
       }
     )
   }
@@ -59,11 +62,11 @@ export default class App extends Component {
   onToggleFontSize = () => {
     const nextState = !this.state.largeText
     this.setState(
-      {
-        largeText: nextState
-      },
+      { largeText: nextState },
       () => {
-        this.rendition.themes.fontSize(nextState ? '140%' : '100%')
+        this.rendition.themes.fontSize(
+          nextState ? '140%' : '100%'
+        )
       }
     )
   }
@@ -71,21 +74,21 @@ export default class App extends Component {
   getRendition = (rendition) => {
     console.log('getRendition callback', rendition)
     // Set inital font-size, and add a pointer to rendition for later updates
-    const { largeText } = this.state
+    //const { largeText } = this.state
     this.rendition = rendition
-    rendition.themes.fontSize(largeText ? '140%' : '100%')
+    //rendition.themes.fontSize(largeText ? '140%' : '100%')
   }
 
   handleChangeFile = (event, results) => {
-    if (results.length > 0) {
+    if(results.length > 0) {
       const [e, file] = results[0]
-      if (file.type !== 'application/epub+zip') {
-        return alert('Unsupported type')
+      if(file.type !== 'application/epub+zip') {
+        throw new Error(`Unsupported Type: ${file.type}`)
       }
       this.setState({
         localFile: e.target.result,
         localName: file.name,
-        location: null
+        location: null,
       })
     }
   }
@@ -95,25 +98,47 @@ export default class App extends Component {
       fullscreen, location, localFile, localName
     } = this.state
     return (
-      <Container>
-        <Bar>
-          <LogoWrapper href="https://github.com/gerhardsletten/react-reader">
-            <Logo
-              src="https://gerhardsletten.github.io/react-reader/files/react-reader.svg"
-              alt="React-reader - powered by epubjs"
-            />
-          </LogoWrapper>
-          <ButtonWrapper>
-            <FileReaderInput as="buffer" onChange={this.handleChangeFile}>
-              <GenericButton>Upload local epub</GenericButton>
-            </FileReaderInput>
-            <GenericButton onClick={this.toggleFullscreen}>
-              Use full browser window
-              <CloseIcon />
-            </GenericButton>
-          </ButtonWrapper>
-        </Bar>
-        <ReaderContainer fullscreen={fullscreen}>
+      <Stack>
+        <Heading hidden={fullscreen}>
+          <Flex>
+            <Link href="https://github.com/gerhardsletten/react-reader">
+              <chakra.img w="8rem" h="8rem" src={logo}/>
+            </Link>
+            <Stack mt={4}>
+              <Link href="https://github.com/gerhardsletten/react-reader">
+                <Text fontSize={40}>React Reader</Text>
+              </Link>
+              <Link href="https://github.com/futurepress/epub.js">
+                <Text fontSize={25} fontWeight="normal">
+                  Powered by ePubJS
+                </Text>
+              </Link>
+            </Stack>
+            <Flex>
+              <Text fontSize={40}>w/</Text>
+              <Link href="https://github.com/dysbulic/mimis-reader">
+                <Flex>
+                  <Text mt={4}> Mïmis</Text>
+                  <chakra.img w="10rem" h="8rem" src={mïmir}/>
+                </Flex>
+              </Link>
+            </Flex>
+            <Spacer/>
+            <Stack mt={30} mr={40}>
+              <FileReaderInput as="buffer" onChange={this.handleChangeFile}>
+                <Button fontSize={20}>
+                  Upload Epub
+                  <Icon as={BiUpload} ml={2.5}/>
+                </Button>
+              </FileReaderInput>
+              <Button fontSize={20} onClick={this.toggleFullscreen}>
+                Hide Title
+                <Icon as={BiExpand} ml={2.5}/>
+              </Button>
+            </Stack>
+          </Flex>
+        </Heading>
+        <Box h={`calc(95vh - ${fullscreen ? 0 : 5}rem)`}>
           <ReactReader
             url={localFile || DEMO_URL}
             title={localName || DEMO_NAME}
@@ -121,11 +146,17 @@ export default class App extends Component {
             locationChanged={this.onLocationChanged}
             getRendition={this.getRendition}
           />
-          <FontSizeButton onClick={this.onToggleFontSize}>
-            Toggle font-size
-          </FontSizeButton>
-        </ReaderContainer>
-      </Container>
+          <Button
+            opacity={0.5}
+            onClick={this.onToggleFontSize}
+            position="absolute"
+            right={25} bottom={0}
+            zIndex={20}
+          >
+            Toggle Font-Size
+          </Button>
+        </Box>
+      </Stack>
     )
   }
 }
