@@ -1,5 +1,4 @@
-import React, { PureComponent } from 'react'
-import PropTypes from 'prop-types'
+import React, { useState } from 'react'
 import { useSwipeable } from 'react-swipeable'
 import {
   Box, Button, Icon, Stack, Flex, Drawer,
@@ -8,14 +7,13 @@ import {
 } from '@chakra-ui/react'
 import { BiCollection, BiDockLeft } from 'react-icons/bi'
 import { EpubView } from '..'
-import defaultStyles from './style'
 
 const Swipeable = ({children, ...props}) => {
   const handlers = useSwipeable(props)
-  return (<div { ...handlers }>{children}</div>)
+  return (<Box {...handlers}>{children}</Box>)
 }
 
-const TocItem = ({
+const ToCItem = ({
   label, setLocation, href, ...props
 }) => (
   <Button
@@ -26,184 +24,120 @@ const TocItem = ({
   </Button>
 )
 
-class ReactReader extends PureComponent {
-  constructor(props) {
-    super(props)
-    this.readerRef = React.createRef()
-    this.state = {
-      expandedToc: false,
-      toc: false,
-    }
+const ReactReader = ({
+  title, showToC, loadingView, locationChanged,
+  swipeable, ...props
+
+}) => {
+  const readerRef = React.createRef()
+  const [toc, setToC] = useState()
+  const {
+    isOpen, onOpen, onClose, onToggle,
+  } = useDisclosure()
+  const next = () => {
+    readerRef.current?.nextPage?.()
   }
-
-  toggleToc = () => {
-    this.setState({
-      expandedToc: !this.state.expandedToc
-    })
+  const prev = () => {
+    readerRef.current?.prevPage?.()
   }
+  const onToCChange = ({ toc }) => (
+    setToC(toc)
+  )
+  const setLocation = ({ location }) => (
+    onClose()
+    //locationChanged(location)
+  )
+  const ToCToggle = () => (
+    <Button position="absolute" left={25} onClick={onToggle}>
+      <Icon as={isOpen ? BiDockLeft : BiCollection}/>
+    </Button>
+  )
+  const btnRef = React.useRef()
+  const ToC = ({
+    toc, setLocation, isOpen, onClose,
+  }) => (
+    <Drawer
+      {...{ isOpen, onClose }}
+      placement="left"
+      finalFocusRef={btnRef}
+    >
+      <DrawerOverlay>
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader>Table of Contents</DrawerHeader>
 
-  next = () => {
-    const node = this.readerRef.current
-    node?.nextPage?.()
-  }
+          <DrawerBody><Stack>
+            {toc.map((item) => (
+              ((() => {
+              return [item, ...item.subitems].map((child, i) => (
+                <ToCItem
+                  key={i} {...child}
+                  justify="flex-start"
+                  fontSize={20} fontWeight="normal"
+                  {...{ setLocation }}
+                />
+              ))
+              })())
+            ))}
+          </Stack></DrawerBody>
 
-  prev = () => {
-    const node = this.readerRef.current
-    node?.prevPage?.()
-  }
+          <DrawerFooter>
+            <Button variant="outline" mr={3} onClick={onClose}>
+              Cancel
+            </Button>
+          </DrawerFooter>
+        </DrawerContent>
+      </DrawerOverlay>
+    </Drawer>
+  )
 
-  onTocChange = (toc) => {
-    const { tocChanged } = this.props
-    this.setState(
-      {
-        toc: toc
-      },
-      () => tocChanged && tocChanged(toc)
-    )
-  }
-
-  renderToc() {
-    const { toc, expandedToc } = this.state
-    //const { isOpen, onOpen, onClose } = useDisclosure()
-
-    return (
-      <Drawer
-        isOpen={expandedToc}
-        placement="left"
-        //onClose={onClose}
-        //finalFocusRef={btnRef}
+  return (
+    <Flex h="100%">
+      {showToC && toc && <ToC/>}
+      <Flex
+        height="100%" width="100%"
+        backgroundColor="#FFF"
       >
-        <DrawerOverlay>
-          <DrawerContent>
-            <DrawerCloseButton />
-            <DrawerHeader>Table of Contents</DrawerHeader>
-
-            <DrawerBody>
-              {toc.map((item) => (
-                ((() => {
-                return [item, ...item.subitems].map((child, i) => (
-                  <TocItem
-                    key={i} {...child}
-                    justify="flex-start"
-                    fontSize={20} fontWeight="normal"
-                    setLocation={this.setLocation}
-                  />
-                ))
-                })())
-              ))}
-            </DrawerBody>
-
-            <DrawerFooter>
-              <Button variant="outline" mr={3} onClick={null/*onClose*/}>
-                Cancel
-              </Button>
-              <Button colorScheme="blue">Save</Button>
-            </DrawerFooter>
-          </DrawerContent>
-        </DrawerOverlay>
-      </Drawer>
-    )
-  }
-
-  setLocation = (loc) => {
-    const { locationChanged } = this.props
-    this.setState(
-      { expandedToc: false },
-      () => locationChanged && locationChanged(loc)
-    )
-  }
-
-  renderTocToggle() {
-    const { expandedToc } = this.state
-    return (
-      <Button onClick={this.toggleToc}>
-        <Icon as={expandedToc ? BiDockLeft : BiCollection}/>
-      </Button>
-    )
-  }
-
-  render() {
-    const {
-      title,
-      showToc,
-      loadingView,
-      styles,
-      locationChanged,
-      swipeable,
-      epubViewStyles,
-      ...props
-    } = this.props
-    const { toc, expandedToc } = this.state
-    return (
-      <Flex h="100%">
-        {showToc && toc && this.renderToc()}
-        <Flex
-          position="relative"
-          zIndex={1}
-          height="100%" width="100%"
-          backgroundColor="#FFF"
-          transition="all .3s ease"
-        >
-          {showToc && this.renderTocToggle()}
-          <Box
-            position="absolute"
-            top={1} left="50vw"
-            transform="translateX(-50%)"
-            textAlign="center"
-            color="#999"
-          >{title}</Box>
-          <Swipeable
-            onSwipedRight={this.prev}
-            onSwipedLeft={this.next}
-            trackMouse
-          >
-            <div style={styles.reader}>
-              <EpubView
-                ref={this.readerRef}
-                loadingView={loadingView}
-                styles={epubViewStyles}
-                {...props}
-                tocChanged={this.onTocChange}
-                locationChanged={locationChanged}
-              />
-              {swipeable && <div style={styles.swipeWrapper} />}
-            </div>
-          </Swipeable>
-          <button
-            style={Object.assign({}, styles.arrow, styles.prev)}
-            onClick={this.prev}
-          >
-            ‹
-          </button>
-          <button
-            style={Object.assign({}, styles.arrow, styles.next)}
-            onClick={this.next}
-          >
-            ›
-          </button>
-        </Flex>
+        {showToC && <ToCToggle/>}
+        <Box
+          position="absolute"
+          top={1} left="50vw"
+          transform="translateX(-50%)"
+          textAlign="center"
+          color="#999"
+        >{title}</Box>
+        {/* <Swipeable
+          onSwipedRight={prev}
+          onSwipedLeft={next}
+          trackMouse
+          id="swipeable"
+          style={{ width: '100%' }}
+        > */}
+          <EpubView
+            ref={readerRef}
+            {...props}
+            tocChanged={onToCChange}
+            {...{ locationChanged, loadingView }}
+          />
+          {/* {swipeable && (
+            <Flex
+              position="absolute"
+              top={0} left={0} bottom={0} right={0}
+              zIndex={200}
+            />
+          )} */}
+        {/* </Swipeable> */}
+        <Button
+          position="absolute" left={0} top="5vh"
+          h="80%" fontSize={100} opacity={0.75} onClick={prev}
+        >‹</Button>
+        <Button
+          position="absolute" right={0} top="5vh"
+          h="80%" fontSize={100} opacity={0.75} onClick={next}
+        >›</Button>
       </Flex>
-    )
-  }
-}
-
-ReactReader.defaultProps = {
-  loadingView: <div style={defaultStyles.loadingView}>Loading…</div>,
-  locationChanged: null,
-  tocChanged: null,
-  showToc: true,
-  styles: defaultStyles
-}
-
-ReactReader.propTypes = {
-  title: PropTypes.string,
-  loadingView: PropTypes.element,
-  showToc: PropTypes.bool,
-  locationChanged: PropTypes.func,
-  tocChanged: PropTypes.func,
-  styles: PropTypes.object,
-  epubViewStyles: PropTypes.object,
-  swipeable: PropTypes.bool
+    </Flex>
+  )
 }
 
 export default ReactReader

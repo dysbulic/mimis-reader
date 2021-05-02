@@ -6,17 +6,6 @@ import {
 } from '@chakra-ui/react'
 import { BiExpand, BiUpload } from 'react-icons/bi'
 import { ReactReader } from './modules'
-import {
-  //Container,
-  //ReaderContainer,
-  //Bar,
-  //LogoWrapper,
-  //Logo,
-  //GenericButton,
-  CloseIcon,
-  //FontSizeButton,
-  //ButtonWrapper,
-} from './Components'
 import logo from './logo.svg'
 import mïmir from './mïmir.svg'
 

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Box } from '@chakra-ui/react'
+import { Box, Flex } from '@chakra-ui/react'
 import Epub from 'epubjs/lib/index'
 import defaultStyles from './style'
 
@@ -10,8 +10,7 @@ class EpubView extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      isLoaded: false,
-      toc: []
+      isLoaded: false, toc: [],
     }
     this.viewerRef = React.createRef()
     this.location = props.location
@@ -21,7 +20,7 @@ class EpubView extends Component {
   }
 
   componentDidMount() {
-    this.initBook(true)
+    this.initBook()
     document.addEventListener(
       'keyup', this.handleKeyPress, false
     )
@@ -39,12 +38,9 @@ class EpubView extends Component {
     this.book = new Epub(url, epubInitOptions)
     this.book.loaded.navigation.then(({ toc }) => (
       this.setState(
-        {
-          isLoaded: true,
-          toc: toc
-        },
+        { isLoaded: true, toc },
         () => {
-          tocChanged && tocChanged(toc)
+          tocChanged?.({ toc })
           this.initReader()
         }
       )
@@ -72,7 +68,7 @@ class EpubView extends Component {
       prevProps.location !== this.props.location
       && this.location !== this.props.location
     ) {
-      this.rendition?.display(this.props.location)
+      this.rendition?.display?.(this.props.location)
     }
     if(prevProps.url !== this.props.url) {
       this.initBook()
@@ -86,7 +82,9 @@ class EpubView extends Component {
     } = this.props
     const node = this.viewerRef.current
 
-    if(!node) throw new Error("Couldn't Find Reference")
+    if(!node) {
+      throw new Error("Couldn't Find Reference")
+    }
 
     this.rendition = this.book.renderTo(
       node, {
@@ -96,8 +94,6 @@ class EpubView extends Component {
         ...epubOptions
       }
     )
-
-    console.info('REND', this.rendition)
 
     this.prevPage = () => {
       this.rendition.prev()
@@ -133,12 +129,12 @@ class EpubView extends Component {
     const newLocation = loc && loc.start
     if(location !== newLocation) {
       this.location = newLocation
-      locationChanged && locationChanged(newLocation)
+      locationChanged?.(newLocation)
     }
   }
 
   renderBook() {
-   return <Box ref={this.viewerRef}/>
+   return <Flex id="book" h="100%" ref={this.viewerRef}/>
   }
 
   handleKeyPress = ({ key }) => {
@@ -148,7 +144,7 @@ class EpubView extends Component {
 
   render() {
     const { isLoaded } = this.state
-    const { loadingView, styles } = this.props
+    const { loadingView } = this.props
     return (
       (isLoaded && this.renderBook()) || loadingView
     )
