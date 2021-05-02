@@ -2,9 +2,9 @@
 
 An ePub-reader for react powered by EpubJS #react #epubjs #webpack #babel #standardjs
 
-[See demo](https://gerhardsletten.github.io/react-reader)
+[See demo](https://dysbulic.github.io/mimis-reader)
 
-![React Reader logo](https://gerhardsletten.github.io/react-reader/files/react-reader.svg)
+![React Reader logo](https://dysbulic.github.io/mimis-reader/logo.svg)
 
 ## React wrapper for epubjs
 
